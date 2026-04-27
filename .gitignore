@@ -1,0 +1,8 @@
+.env
+.cache
+tidal_session.json
+logs/
+__pycache__/
+*.pyc
+*.pyo
+.python-version

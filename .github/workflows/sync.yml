@@ -1,0 +1,36 @@
+name: Spotify-Tidal Sync
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # Every Monday at 09:00 UTC
+  workflow_dispatch:        # Allow manual trigger from the Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync
+        run: python sync.py
+        env:
+          SPOTIFY_CLIENT_ID:     ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_REDIRECT_URI:  ${{ secrets.SPOTIFY_REDIRECT_URI }}
+          SPOTIFY_PLAYLIST_ID:   ${{ secrets.SPOTIFY_PLAYLIST_ID }}
+          TIDAL_PLAYLIST_ID:     ${{ secrets.TIDAL_PLAYLIST_ID }}
+          RESEND_API_KEY:        ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM:           ${{ secrets.RESEND_FROM }}
+          RESEND_TO:             ${{ secrets.RESEND_TO }}
+          # Token files serialised as secrets after first local run.
+          # See .env.example for instructions.
+          SPOTIFY_CACHE:         ${{ secrets.SPOTIFY_CACHE }}
+          TIDAL_SESSION:         ${{ secrets.TIDAL_SESSION }}

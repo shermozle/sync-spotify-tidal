@@ -1,0 +1,4 @@
+spotipy==2.26.0
+tidalapi==0.8.11
+resend==2.29.0
+python-dotenv==1.0.0
