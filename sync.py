@@ -34,7 +34,7 @@ from spotipy.oauth2 import SpotifyOAuth
 # ---------------------------------------------------------------------------
 
 HIGH_CONF_THRESHOLD = 0.85
-TIDAL_SESSION_FILE = "tidal_session.json"
+TIDAL_SESSION_FILE = Path("tidal_session.json")
 SPOTIFY_CACHE_FILE = ".cache"
 
 SPOTIFY_SCOPES = (
@@ -183,7 +183,7 @@ def setup_credentials_from_env(config: dict) -> None:
     if config["SPOTIFY_CACHE"]:
         Path(SPOTIFY_CACHE_FILE).write_text(config["SPOTIFY_CACHE"])
     if config["TIDAL_SESSION"]:
-        Path(TIDAL_SESSION_FILE).write_text(config["TIDAL_SESSION"])
+        TIDAL_SESSION_FILE.write_text(config["TIDAL_SESSION"])
 
 
 # ---------------------------------------------------------------------------
@@ -445,7 +445,7 @@ def sync_direction(
 
 def setup_logger(log_dir: str) -> tuple[logging.Logger, Path]:
     Path(log_dir).mkdir(parents=True, exist_ok=True)
-    ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+    ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H-%M-%S")
     log_path = Path(log_dir) / f"sync_{ts}.log"
 
     logger = logging.getLogger("sync")
@@ -713,7 +713,7 @@ def main() -> None:
         test_mode = args.test or config["TEST_MODE"]
 
         logger, log_path = setup_logger(config["LOG_DIR"])
-        run_start = datetime.datetime.utcnow()
+        run_start = datetime.datetime.now(datetime.UTC)
         mode_label = " [TEST MODE]" if test_mode else ""
         logger.info(
             "Sync run started at %s UTC%s",
